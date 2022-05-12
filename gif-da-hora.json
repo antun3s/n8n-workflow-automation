@@ -21,7 +21,7 @@
             "parameter": [
               {
                 "name": "api_key",
-                "value": "POST_YOUR_API_KEY_HERE"
+                "value": "INSERT_HERE_YOUR_GIPHY_API_KEY"
               },
               {
                 "name": "tag",
@@ -48,7 +48,7 @@
       },
       {
         "parameters": {
-          "webhookUri": "https://discord.com/api/webhooks/971846578514067516/o63zeAGvZIp9kPCESsk_-mruYPw5I8dccl9nxuKQKA5gCKXdUJngOo4QBwa3sispQS73",
+          "webhookUri": "INSERT_HERE_YOUR_DISCORT_WEBHOOK_",
           "text": "={{$json[\"body\"][\"data\"][\"embed_url\"]}}",
           "options": {}
         },
