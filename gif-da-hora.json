@@ -1,0 +1,113 @@
+{
+    "name": "gif-da-hora",
+    "nodes": [
+      {
+        "parameters": {},
+        "name": "Start",
+        "type": "n8n-nodes-base.start",
+        "typeVersion": 1,
+        "position": [
+          -220,
+          540
+        ]
+      },
+      {
+        "parameters": {
+          "url": "https://api.giphy.com/v1/gifs/random",
+          "options": {
+            "fullResponse": true
+          },
+          "queryParametersUi": {
+            "parameter": [
+              {
+                "name": "api_key",
+                "value": "POST_YOUR_API_KEY_HERE"
+              },
+              {
+                "name": "tag",
+                "value": "fail"
+              },
+              {
+                "name": "type",
+                "value": "random"
+              },
+              {
+                "name": "raing",
+                "value": "pg-13"
+              }
+            ]
+          }
+        },
+        "name": "HTTP Request1",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 1,
+        "position": [
+          -40,
+          380
+        ]
+      },
+      {
+        "parameters": {
+          "webhookUri": "https://discord.com/api/webhooks/971846578514067516/o63zeAGvZIp9kPCESsk_-mruYPw5I8dccl9nxuKQKA5gCKXdUJngOo4QBwa3sispQS73",
+          "text": "={{$json[\"body\"][\"data\"][\"embed_url\"]}}",
+          "options": {}
+        },
+        "name": "Discord",
+        "type": "n8n-nodes-base.discord",
+        "typeVersion": 1,
+        "position": [
+          140,
+          380
+        ]
+      },
+      {
+        "parameters": {
+          "triggerTimes": {
+            "item": [
+              {
+                "mode": "custom",
+                "cronExpression": "0 8-17 * * 2-5"
+              }
+            ]
+          }
+        },
+        "name": "Cron",
+        "type": "n8n-nodes-base.cron",
+        "typeVersion": 1,
+        "position": [
+          -220,
+          380
+        ]
+      }
+    ],
+    "connections": {
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "Discord",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Cron": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": true,
+    "settings": {
+      "timezone": "America/Sao_Paulo",
+      "executionTimeout": -1
+    },
+    "id": 3
+  }
