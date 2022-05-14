@@ -1,0 +1,188 @@
+{
+  "name": "Monitora lançamento de versões do Domínio Sistemas",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        200,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://download.dominiosistemas.com.br/atualizacao/contabil/102a03/atualizacoes/",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "string",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        500,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        680,
+        640
+      ],
+      "webhookId": "e5f84b2f-2568-4f5b-a72b-ed54838c768b",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "https://download.dominiosistemas.com.br/atualizacao/contabil/102a03/atualizacoes/",
+        "allowUnauthorizedCerts": true,
+        "responseFormat": "string",
+        "options": {}
+      },
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        860,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"HTTP Request1\"].json[\"data\"]}}",
+              "value2": "={{$node[\"HTTP Request\"].json[\"data\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1080,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        300,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "webhookUri": "https://discord.com/api/webhooks/971846578514067516/o63zeAGvZIp9kPCESsk_-mruYPw5I8dccl9nxuKQKA5gCKXdUJngOo4QBwa3sispQS73",
+        "text": "=Atualizações na URL:\n{{$node[\"HTTP Request1\"].parameter[\"url\"]}}",
+        "options": {}
+      },
+      "name": "Discord",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        740
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        520
+      ]
+    }
+  ],
+  "connections": {
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timezone": "America/Sao_Paulo",
+    "errorWorkflow": "2"
+  },
+  "id": 2
+}
